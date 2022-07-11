@@ -3,11 +3,12 @@ from storage import celebrity_schema
 import pysolr
 
 
-
 def NotExistInSolr(url):
     """
         Cette fonstion sert à la verification si une image existe dans Solr ou pas,
-        en utiisant url.
+    en utiisant url.
+    :param url: le lien de l'image.
+    :return: false si l'image existe déjà dans la base de donnée.
     """
     try :
         solr = pysolr.Solr('http://localhost:8983/solr/core_2')
@@ -22,8 +23,10 @@ def NotExistInSolr(url):
 
 def NotExistInMongodb(url):
     """
-        Cette fonstion sert à la verification si une image existe dans Mongodb ou pas,
+            Cette fonstion sert à la verification si une image existe dans Mongodb ou pas,
         en utiisant url.
+    :param url: le lien de l'image.
+    :return: false si l'image existe déjà dans la base de donnée.
     """
     try:
         connexion.get_connexion()

@@ -4,6 +4,10 @@ from Dataset import getDataset
 from storage import connexion,celebrity_schema
 
 def get_mongo_name_celebrities() :
+    """
+    Cette fonction consiste à récupérer les noms des célébrité stockés dans la base de données.
+    :return: la liste des célébrités stcokés dans la BD.
+    """
     celebritys = []
     try :
         connexion.get_connexion()
@@ -17,6 +21,10 @@ def get_mongo_name_celebrities() :
     return celebritys
 
 def get_new_name_celebrities() :
+    """
+    Cette fonction consiste à récupérer des nouvelles célébrités à partir de Wikidata.
+    :return: la liste des nouvelles célébrités.
+    """
     celebritys = []
     celebritys_name = []
     try :
@@ -26,10 +34,16 @@ def get_new_name_celebrities() :
             for element in categorie['results']['bindings']:
                 celebrity = {}
                 if element['humanLabel']['value'] not in celebritys_name and celebrity_schema.Celebrity.objects(name=element['humanLabel']['value']).count() == 0:
-                    celebrity['name'] = element['humanLabel']['value']
-                    celebrity['profession'] = element['humanDescription']['value']
-                    celebritys_name.append(element['humanLabel']['value'])
-                    celebritys.append(celebrity)
+                    try :
+                        celebrity['name'] = element['humanLabel']['value']
+                        celebrity['profession'] = element['humanDescription']['value']
+                        celebritys_name.append(element['humanLabel']['value'])
+                        celebritys.append(celebrity)
+                    except :
+                        celebrity['name'] = element['humanLabel']['value']
+                        celebrity['profession'] = '--'
+                        celebritys_name.append(element['humanLabel']['value'])
+                        celebritys.append(celebrity)
         print(celebritys)
         print(len(celebritys))
 

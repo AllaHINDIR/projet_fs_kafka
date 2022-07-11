@@ -1,10 +1,5 @@
-import io
-from urllib.request import urlopen
-import blosc
 import numpy
 import numpy as np
-import requests
-from PIL import Image, ImageChops
 import hashlib
 import cv2
 from skimage.metrics import structural_similarity as ssim
@@ -12,6 +7,12 @@ from skimage.metrics import structural_similarity as ssim
 
 ## methode with md5
 def md5(image1,image2):
+    """
+    Cette fonction consiste à vérifier si deux image ont le meme hachage.
+    :param image1: une image lu par PIL.Image.
+    :param image2: une image lu par PIL.Image.
+    :return: false si les deux images sont identiques.
+    """
     try :
         f1_hash = hashlib.sha256(image1.tobytes()).hexdigest()
         f2_hash = hashlib.sha256(image2.tobytes()).hexdigest()
@@ -29,17 +30,14 @@ def md5(image1,image2):
     except Exception as ex :
         print('[ERROR] There is an exception : ', ex)
 
-# methode PIL
-def pil(image1,image2):
-
-    diff = ImageChops.difference(image1,image2)
-
-    if diff.getbbox():
-        diff.show()
-    else:
-        print('Kif Kif :) ')
 
 def mse(imageA, imageB):
+    """
+    Cette fonction consiste à calculer le MSE comme indice de similarité.
+    :param imageA:une image lu par CV2.
+    :param imageB:une image lu par CV2.
+    :return: la valeur de l'indice (si il est proche de 0 alors les deux images sont plus similaires)
+    """
     # the 'Mean Squared Error' between the two images is the
     # sum of the squared difference between the two images;
     # NOTE: the two images must have the same dimension
@@ -51,6 +49,12 @@ def mse(imageA, imageB):
 
 # methode Opencv
 def open_cv(image1,image2):
+    """
+    Cette fonction consiste à caculer deux indice de similarité le MSE et SSIM.
+    :param image1: une image lu par PIL.Image.
+    :param image2: une image lu par PIL.Image.
+    :return: en se basant sur les valeurs des deux indices la fonction retourne true si les 2 images ne sont pas similaire.
+    """
     try :
         # use numpy to convert the pil_image into a numpy array
         numpy_image1 = numpy.array(image1)
@@ -94,28 +98,7 @@ def open_cv(image1,image2):
     except Exception as ex :
         print('[ERROR] There are an exception : ', ex)
 
-def sift(image1,image2):
-    try :
-        numpy_image1 = numpy.array(image1)
-        numpy_image2 = numpy.array(image2)
-        # convert to a openCV2 image, notice the COLOR_RGB2BGR which means that
-        # the color is converted from RGB to BGR format
-        img1 = cv2.cvtColor(numpy_image1, cv2.COLOR_RGB2BGR)
-        img2 = cv2.cvtColor(numpy_image2, cv2.COLOR_RGB2BGR)
 
-        sift = cv2.SIFT_create()
-
-        kp1, des1 = sift.detectAndCompute(img1, None)
-        kp2, des2 = sift.detectAndCompute(img2, None)
-
-
-
-        print('Debut')
-        print(np.array_equal(des1,des2))
-        print('Fin')
-
-    except Exception as e :
-        print('[ERROR] There is an error : ',e)
 
 
 

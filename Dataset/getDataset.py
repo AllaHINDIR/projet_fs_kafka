@@ -12,6 +12,11 @@ sparql = SPARQLWrapper(endpoint)
 
 
 def extract_string(string):
+    """
+    Cette fonction consiste à extraire un text d'une chaine de caracteres.
+    :param string: la chaine de caracteres.
+    :return: la partie extraite
+    """
     try:
         found = string.removeprefix("http://www.wikidata.org/entity/")
         print(found)
@@ -21,6 +26,11 @@ def extract_string(string):
 
 
 def get_persons(occupation):
+    """
+    Cette fonction permet de récupérer les célébrités dont l'occupation est donnée en parametre.
+    :param occupation: la profession.
+    :return: un objet JSON qui contient toutes les célébrités récupérés.
+    """
     sparql.setQuery("""
     SELECT DISTINCT ?human ?humanLabel ?humanDescription ?birth ?linkcount
     WHERE
@@ -52,6 +62,11 @@ def get_persons(occupation):
 
 
 def get_persons_static(occupation):
+    """
+    Cette fonction permet de récupérer les célébrités dont l'occupation est donnée en parametre.
+    :param occupation: la profession.
+    :return: un objet JSON qui contient toutes les célébrités récupérés.
+    """
     sparql.setQuery("""
     SELECT DISTINCT ?human ?humanLabel ?humanDescription ?birth ?linkcount
     WHERE
@@ -80,9 +95,13 @@ def get_persons_static(occupation):
     # pprint(results)
     return results
 
-def main() :
+def main2() :
+        """
+        Programme principal responsable sur le lancement de la recherche des célébrités sur Wikidata en utilisant
+        un nombre défini des threads. Apres la récupération des 6 premiere professions les plus célébres sur Wikidata.
+        :return: un json contenant les informations des célébrités de chaque profession.
+        """
 
-    """
         start = time.time()
         occupations = getOccupation.get_occupation()
         with concurrent.futures.ThreadPoolExecutor(max_workers=6) as process:
@@ -96,12 +115,16 @@ def main() :
         print(len(r1))
         return r1
 
-        Q36180 ecrivien
-        Q169470 physicien
-        Q13590141 animateur
 
-        ["Q937857","Q177220","Q82955","Q2252262"]
+def main() :
     """
+    Programme principal responsable sur le lancement de la recherche des célébrités sur Wikidata en utilisant
+    un nombre défini des threads.
+    Ici le choix des professions est statique : fooballeur, chanteur, poloticien, rappeur, ecrivien, animateur, physicien.
+    :return: un json contenant les informations des célébrités de chaque profession.
+    """
+
+
     start = time.time()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=7) as process:
