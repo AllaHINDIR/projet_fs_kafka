@@ -1,3 +1,6 @@
+# Il s'agit du programme principal qui permet de lancer toute
+# la pile des producteurs et les consommateurs de kafka d'une manière automatique
+
 import time
 from multiprocessing import Process
 from Kafka.consumers import consumer_prod_urls,consumer_storage,consumer_entrianement
@@ -6,6 +9,7 @@ from storage import mongodb
 
 
 if __name__ == '__main__':
+
     type_recherche = 'n'
     list_searshKeys = []
     indice = 0

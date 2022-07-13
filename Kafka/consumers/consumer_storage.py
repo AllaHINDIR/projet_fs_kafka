@@ -10,7 +10,7 @@ PATH_PHOTOS = PATH_PHOTOS.removesuffix('Kafka\consumers') + '\photos'
 
 def connect_kafka_consumer(topic_name):
     """
-    Cette fonstion permet la creation d'un consomateur lié à un topic et un broker.
+    Cette fonstion permet la creation d'un consomateur lié à un topic (topic_name) et un broker (9092).
     :param topic_name: represente le nom du topic auquel le consommateur sera lié.
     :return: un objet consommateur
     """
@@ -25,6 +25,11 @@ def connect_kafka_consumer(topic_name):
         return consumer
 
 def consumerStorage():
+    """
+    Cette fonction permet au consumer de stockage de récupérer les données envoyées dans topic_name.
+    Ce consumer stocke les données dans un FS et une BD.
+    :return: pas de valeur precise.
+    """
     print('Running ConsumerStorage..')
     topic_name = 'urlsVerifie'
 

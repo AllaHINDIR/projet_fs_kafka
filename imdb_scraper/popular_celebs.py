@@ -6,6 +6,11 @@ import requests
 from bs4 import BeautifulSoup
 
 def getListUrl(numberOfCeleb):
+    """
+    Cette fonction permet de collecter les liens des pages web qui contiennent les differentes célébrités.
+    :param numberOfCeleb: nombre max de célébrités à récupérer.
+    :return: la listes des liens des page web qui contiennent les célébrités.
+    """
     #chaque page contient 50 celeb
     list_url = []
     for i in range(1,numberOfCeleb,50) :
@@ -16,17 +21,34 @@ def getListUrl(numberOfCeleb):
     return list_url
 
 async def fetch(session, url):
+    """
+    Elle permet de recupérer la reponse d'une requete HTTP.
+    :param session: la session de client sur laquelle la requete sera executée.
+    :param url: l'url de la requete http.
+    :return: le text de la reponse.
+    """
     async with async_timeout.timeout(10):
         async with session.get(url) as response:
             return await response.text()
 
 async def soup_d(html, display_result=False):
+    """
+    Cette fonction permet de transformer un objet html en un objet python en utilisant BeautifulSoup.
+    :param html: le code html de la page web.
+    :param display_result: paramertre pour ne pas afficher le resultat.
+    :return: l'objet python.
+    """
     soup = BeautifulSoup(html, 'html.parser')
     if display_result:
         print(soup.prettify())
     return soup
 
 async def extract_celeblist(html):
+    """
+    Cette fonction consiste à parcourir l'objet python et extraire les infos des célébrités.
+    :param html: le code html de la page web qui contient plusieurs célébrités.
+    :return: la liste des infos des différentes célébrités détéctés.
+    """
     soup = await soup_d(html)
     celeblist = soup.find('div', {"class": "lister-list"})
     data_page = []
@@ -55,6 +77,12 @@ async def extract_celeblist(html):
         print(celeblist)
 
 async def getCelebrityInfo(url) :
+    """
+    Cette fonction permet de créer une sessions client pour les requetes. Ensuite faire appel aux différentes
+    fonctions.
+    :param url: le lien de la page web qui contient les infos des célébrités.
+    :return: le résultat de la fonction extract_celeblist.
+    """
     try :
         start = time.time()
         async with aiohttp.ClientSession() as session:
@@ -69,6 +97,11 @@ async def getCelebrityInfo(url) :
         print(e)
 
 async def async_getCelebrities(urls):
+    """
+    Ctte fonction permet de lancer plusieurs taches en mode async.
+    :param urls: la liste des page web qui contiennent les infos des célébrités.
+    :return: le rsultat des différentes taches.
+    """
     tasks = [asyncio.create_task(getCelebrityInfo(url)) for url in urls]
     await asyncio.gather(*tasks)
     #print(tasks[0].result())
@@ -81,15 +114,13 @@ async def async_getCelebrities(urls):
     #print(data)
     return data
 
-http_proxy = "http://20.47.108.204:8888"
-https_proxy = "http://170.155.5.235:8080"
-
-proxies = {
-              "http": http_proxy,
-              "https": https_proxy
-            }
 
 def getCelebrities(numberOfCeleb):
+    """
+    Cette fonction fait le meme travail que les autres fonction sauf que'elle est en mode synchrone.
+    :param numberOfCeleb: nombre de célébrité à récupérer.
+    :return: liste des infos des célébrités.
+    """
     try :
         data = []
         nmbr_celeb_scrape = 1
@@ -135,6 +166,10 @@ def getCelebrities(numberOfCeleb):
 
 
 def main() :
+    """
+    Programme principal qui lance les taches et récupere leurs résultats en mode async.
+    :return: le resyltat des taches.
+    """
     start = time.time()
     # getCelebrities(500)
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -149,7 +184,6 @@ if __name__ == '__main__':
 
 
 
-#getCelebrities(500)
 """
 session = requests.Session()
 

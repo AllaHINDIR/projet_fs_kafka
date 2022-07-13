@@ -18,12 +18,24 @@ PATH_PHOTOS = PATH + '\\photos'
 
 
 def get_embedding(model,image):
+    """
+    Cette fonction permet de calculer le vecteur de chaque image donnée en parametre selon un model donné.
+    :param model: le model du calcul.
+    :param image: l'image lu par CV2.
+    :return: un vecteur de longueur 128.
+    """
     samples = np.expand_dims(image, axis=0)
     yhat = model.predict(samples)
     embedding = yhat[0]
     return embedding
 
 def get_data(dataset_path,model):
+    """
+    Cette fonction permet de parcourir toute la BD et de faire le calcul de données de chaque image.
+    :param dataset_path: le chemin des images dans le FS.
+    :param model: le model utiliser pour le caclul des vecteur.
+    :return: les données de toutes les images stockées.
+    """
     images = []
     labels = []
     names = []
@@ -65,6 +77,16 @@ def get_data(dataset_path,model):
 
 
 def get_clean_data(dataset_path, labels, embeds, names, threshold=9, method='distance'):
+    """
+    Cette fonction permet d'utiliser la methode de barycentre pour nettoyer la BD des images.
+    :param dataset_path: le chemin vers les images.
+    :param labels: noms de chaque fichier image.
+    :param embeds: les vecteurs des images.
+    :param names: les noms de toutes les célébrités.
+    :param threshold: la distance max pour que l'image ne soit pas supprimé.
+    :param method: en précisant la methode utilisée.
+    :return: les données des images apres nettoyage.
+    """
     print("[INFO] wait to clean data from mongo/FS")
     outliers = {}
     clean_embed = []
@@ -100,6 +122,13 @@ def get_clean_data(dataset_path, labels, embeds, names, threshold=9, method='dis
     return outliers, np.array(clean_embed), np.array(clean_labels)
 
 def get_dict_embedding_label_name(embeddings,labels,names):
+    """
+    Mettre les données dans des dictionnaires pour faciliter leurs utilisations.
+    :param embeddings: les vecteurs des images.
+    :param labels: les noms des fichiers images.
+    :param names: les noms des célébrités.
+    :return: les dictionnaires contenants les données.
+    """
     embeds_dict = defaultdict(list)
     names_dict = defaultdict(list)
     for i, k in enumerate(labels):
@@ -108,6 +137,10 @@ def get_dict_embedding_label_name(embeddings,labels,names):
     return embeds_dict,names_dict
 
 def main():
+    """
+    Programme principal qui lance le processus de nettoyage.
+    :return: les données des images apres nettoyage.
+    """
     connexion.get_connexion()
     model = InceptionResNetV2()
     model.load_weights(PATH_FACENET)
@@ -118,6 +151,11 @@ def main():
     return clean_embed,clean_labels
 
 def main_kafka():
+    """
+    Programme principal qui lance le processus de nettoyage.
+    Il est utilisé dans le cas de kafka car la valeur retournée est adaptée aux inputx de kafka.
+    :return: les données des images apres nettoyage.
+    """
     connexion.get_connexion()
     model = InceptionResNetV2()
     model.load_weights(PATH_FACENET)

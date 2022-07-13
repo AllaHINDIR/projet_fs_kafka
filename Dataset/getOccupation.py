@@ -5,6 +5,10 @@ endpoint = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 sparql = SPARQLWrapper(endpoint)
 
 def get_occupation():
+    """
+    Cette fonction consiste à récupérer les professions les plus reconnus sur Wikidata.
+    :return: un json contenant les informations des professions.
+    """
 
     sparql.setQuery("""SELECT DISTINCT ?profession ?professionLabel ?linkcount  WHERE {
       {

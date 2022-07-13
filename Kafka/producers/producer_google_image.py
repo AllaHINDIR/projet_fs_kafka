@@ -92,6 +92,18 @@ class GoogleImageScraper():
         return image_urls
 
 def producerGoogleImageLinks(name,profession,url,numeroimage,key):
+    """
+    Cette fonction permet de définir le producer de google images.
+    ce producer est lié au broker 9092.
+    il écrit dans le topic topic_name.
+    il envoie les données suivantes :
+    :param name: le nom de la célébrité
+    :param profession: la profession de la célébrité
+    :param url: le lien de l'image de la célébrité
+    :param numeroimage: le numero de l'image
+    :param key: la clé qui caractérise chaque donnée envoyée, dans notre chaque donnée va etre envoyée dans une ligne.
+    :return: producer.
+    """
     topic_name = 'urls'
     producer = None
     try:
@@ -112,6 +124,11 @@ def producerGoogleImageLinks(name,profession,url,numeroimage,key):
         print(str(ex))
 
 def get_images(search_key) :
+    """
+    cette fonction permet d'initaliser un scrapeur google images et de lancer la recherche des images.
+    :param search_key: le nome de la célébrité pour laquelle la recherche des images s'effectue.
+    :return:
+    """
     # Define file path
     gd = GoogleImageScraper(search_key)
     image_urls = gd.find_image_urls()
@@ -120,6 +137,15 @@ def get_images(search_key) :
     del gd
 
 def start(typeOfCelebrity,list):
+    """
+    programme de lancement avec les threads en precisant le type de recheche.
+    Soit la recherche des images pour des nouvelles célébrité.
+    soit la recherche des images pour les anciens célébrité.
+    soit de faire les deux en meme temps.
+    :param typeOfCelebrity: le type de recherche.
+    :param list: liste vide.
+    :return:
+    """
     if typeOfCelebrity == 'n' or typeOfCelebrity == 'N':
         search_keys2 = get_celebrities.get_new_name_celebrities()
     elif typeOfCelebrity == 'o' or typeOfCelebrity == 'O':

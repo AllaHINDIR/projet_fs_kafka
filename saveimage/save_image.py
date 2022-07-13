@@ -155,6 +155,14 @@ def detection_face(image):
 
 
 async def async_download_image(image_url, image_number,images_path,search_key):
+    """
+    Cette fonction permet de télécharger les images récupérer par le scrapeur en mode asynchrone.
+    :param image_url: le lien de l'image.
+    :param image_number: le numéro de l'image.
+    :param images_path: le chemin de stockage des images.
+    :param search_key: le nom de la célébrité concernée.
+    :return:
+    """
     try:
         print("[INFO] Image url:%s" % (image_url))
         search_string = ''.join(e for e in search_key if e.isalpha() or e.isspace())

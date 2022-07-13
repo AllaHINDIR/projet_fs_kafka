@@ -5,6 +5,11 @@ from kafka import KafkaConsumer
 from entrainement import model
 
 def connect_kafka_consumer(topic_one_name):
+    """
+    Cette fonction permet de connecter le consumer d'entrainement au broker 9092, et au topic donné en parametre.
+    :param topic_one_name: le nom du topic qui va etre lié au consumer.
+    :return: le consumer d'entrainement.
+    """
     consumer = None
     try:
         consumer = KafkaConsumer(topic_one_name,group_id='mygroup3', auto_offset_reset='earliest',enable_auto_commit=True,  bootstrap_servers=['localhost:9092'])
@@ -16,6 +21,11 @@ def connect_kafka_consumer(topic_one_name):
 
 
 def consumerCleanData():
+    """
+    Cette fonction permet au consumer d'entrainement de consommer les données stocker dans le topic topic_name.
+    et produire le model de classification.
+    :return: aucune valeur bien precise.
+    """
     print('Running ConsumerCleanData..')
     topic_name = 'dataclean'
     try:

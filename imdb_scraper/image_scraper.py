@@ -6,6 +6,11 @@ import aiohttp
 import popular_celebs
 
 def getListCelebrities():
+    """
+    Cette fonction consiste à récupérer les informations des célébrités de la plateforme imdb, à travers un
+    scrapeur de données.
+    :return: une liste des objets contenant les informations des célévrités.
+    """
     try:
         celebrities = popular_celebs.main()
         time.sleep(15)
@@ -14,6 +19,11 @@ def getListCelebrities():
     return celebrities
 
 async def get_photo_link_original(link):
+    """
+    Cette fonction consiste à extraire les liens des images originales sur la plateforme imdb.
+    :param link: le liens ou se trouve l'image originale.
+    :return: le liens de l'image originale.
+    """
     photolink = None
     try :
         async with aiohttp.ClientSession() as session:
@@ -25,6 +35,11 @@ async def get_photo_link_original(link):
     return photolink
 
 async def extract_photos_links(html):
+    """
+    Cette fonction consiste à extraire une liste des liens des pages ou se trouves les images originales.
+    :param html: le code html de la page web corespondante à une célébrité.
+    :return: les liens des images originales.
+    """
     soup = await popular_celebs.soup_d(html)
     photosBoxslist = soup.find('div', {"class": "media_index_thumb_list"})
     data_page = []
@@ -40,6 +55,11 @@ async def extract_photos_links(html):
 
 
 async def getCelebrityPhoto(celebrity) :
+    """
+    Cette fonction consiste à extraire le code html correspendant à une celebrité.
+    :param celebrity: dictionnaire qui contient les infos de la celebrité.
+    :return: un disctionnaire qui contient pour chaque celebrité les liens de ses images.
+    """
     try :
         data_photo = {}
         start = time.time()
@@ -55,6 +75,11 @@ async def getCelebrityPhoto(celebrity) :
 
 
 async def async_getCelebritiesPhotos(celebrities):
+    """
+    Fonction qui permet de définir les taches executées en mode asynchrone.
+    :param celebrities: la liste des célébrités pour lesquels nous cherchons les images.
+    :return: la liste de tous les resultats des taches executées.
+    """
     data = []
     for i in range(0,len(celebrities),100):
         tasks = [asyncio.create_task(getCelebrityPhoto(celebrity)) for celebrity in celebrities[i:i+100]]
@@ -69,6 +94,10 @@ async def async_getCelebritiesPhotos(celebrities):
 
 
 def main() :
+    """
+    Programme principal qui lance les differentes taches à executer.
+    :return: le resultats des differentes taches.
+    """
     start = time.time()
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     result = asyncio.run(async_getCelebritiesPhotos(getListCelebrities()))

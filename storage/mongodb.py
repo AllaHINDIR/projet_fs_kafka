@@ -6,7 +6,12 @@ connexion.get_connexion()
 
 def save_celebrity(name,profession ,filename, url):
     """
-        save_celebriry et store_images : Consiste à stcoker la celebrité et son image dans mongodb.
+    Consiste à stcoker la celebrité et son image dans mongodb.
+    :param name: le nom de la célébrité.
+    :param profession: le secteur d'activité de la célébrité.
+    :param filename: le nom de fichier image.
+    :param url: le lien de l'image.
+
     """
     celebrity = celebrity_schema.Celebrity(name = name,categorie=profession)
     image_document = celebrity_schema.Image(url=url,name=filename)
@@ -18,7 +23,12 @@ def save_celebrity(name,profession ,filename, url):
 
 def store_images(name,profession ,filename,url) :
     """
-        save_celebriry et store_images : Consiste à stcoker la celebrité et son image dans mongodb.
+    Consiste à stcoker la celebrité et son image dans mongodb.
+    :param name: le nom de la célébrité.
+    :param profession: le secteur d'activité de la célébrité.
+    :param filename: le nom de fichier image.
+    :param url: le lien de l'image.
+
     """
     try :
         celebrity_count = celebrity_schema.Celebrity.objects(name=name).count()
@@ -52,6 +62,10 @@ def count_new_image(name):
 
 
 def current_nmbr_image():
+    """
+    cette fonction permet de compter le nombre d'image acctuelle pour chaque célébrité.
+    :return: un dictionnaire qui contient la célébrité et le nombre d'image qu'il a.
+    """
     celebrity_imageNumber = []
     for celebrity in celebrity_schema.Celebrity.objects:
         dict_name_image = {}

@@ -13,6 +13,7 @@ from saveimage import save_image
 
 
 class GoogleImageScraper():
+
     def __init__(self, image_path, search_key="Donald Trump", number_of_images=1):
 
         # check parameter types
@@ -42,6 +43,11 @@ class GoogleImageScraper():
         self.url = "https://www.google.com/search?q=%s&source=lnms&tbm=isch&sa=X&ved=2ahUKEwie44_AnqLpAhUhBWMBHUFGD90Q_AUoAXoECBUQAw&biw=1920&bih=947" % (search_key['name'])
 
     def find_image_urls(self):
+        """
+        cette fonction consiste à chercher et parcourir les images sur google images, puis les stocker sur la base de données
+        une fois qu'elles sont vérifiées.
+        :return: la liste des liens des images récupérées.
+        """
         print("[INFO] Scraping for image link... Please wait.")
         image_urls = []
         count = 0

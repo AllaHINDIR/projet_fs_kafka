@@ -6,6 +6,18 @@ import aiohttp
 from tmdb_scraper import popular_celebs
 
 def producerTmdbLinks(name,url,numeroimage,key):
+    """
+    Cette fonction permet de définir le producer de TMDB.
+    ce producer est lié au broker 9092.
+    il écrit dans le topic topic_name.
+    il envoie les données suivantes :
+    :param name: le nom de la célébrité
+    :param profession: la profession de la célébrité
+    :param url: le lien de l'image de la célébrité
+    :param numeroimage: le numero de l'image
+    :param key: la clé qui caractérise chaque donnée envoyée, dans notre chaque donnée va etre envoyée dans une ligne.
+    :return: producer.
+    """
     topic_name = 'urlsFromTmdb'
     producer = None
     try:
@@ -29,6 +41,10 @@ def producerTmdbLinks(name,url,numeroimage,key):
 
 
 def getListCelebrities():
+    """
+    Cette fonction permet de récupérer les noms des célébrités à partir de scrapeur de tmdb des noms.
+    :return: la liste des noms des célébrités.
+    """
     try:
         celebrities = popular_celebs.main()
         time.sleep(15)
@@ -38,6 +54,11 @@ def getListCelebrities():
 
 
 def getLowerName(name):
+    """
+    Elle permet d'écrire les noms en miniscule, puis enlever les '-'.
+    :param name: le nom de la célébrité.
+    :return: le nom avec les nouvelles modifications.
+    """
     try:
         lower_name = name.lower()
         new_string = lower_name.replace(' ', '-')
@@ -48,6 +69,12 @@ def getLowerName(name):
 
 
 async def extract_photo_link(html, celebrity):
+    """
+    Cette fonction permet d'extraire les liens des images des célébrités à partir du code html.
+    :param html: le code html de la page web du profil de la célébrité.
+    :param celebrity: les infos de la célébrité.
+    :return: liste des liens des images.
+    """
     soup = await popular_celebs.soup_d(html)
     photolist = soup.find('ul', {"class": "images posters compact"})
     data_page = []
@@ -62,6 +89,12 @@ async def extract_photo_link(html, celebrity):
 
 
 async def getCelebrityPhoto(celebrity):
+    """
+    Elle permet de créer une session client pour effectuer les requetes de récupération des pages web des célébrités.
+    Puis, elle récupere le resultat de la fct extract_photo_link.
+    :param celebrity: les infos de la célébrités.
+    :return: un sictionnaire qui conient les infos de la célébrité plus les liens de ses images.
+    """
     try:
         data_photo = {}
         start = time.time()
@@ -83,6 +116,11 @@ async def getCelebrityPhoto(celebrity):
 
 
 async def async_getCelebritiesPhotos(celebrities):
+    """
+    Cette fonction permet de lancer plusieurs taches en mode asynchrone.
+    :param celebrities: la liste des célébrités.
+    :return: liste qui contient tous les resultats de toutes les taches.
+    """
     data = []
     for i in range(0, len(celebrities), 60):
         tasks = [asyncio.create_task(getCelebrityPhoto(celebrity)) for celebrity in celebrities[i:i + 60]]
@@ -96,6 +134,10 @@ async def async_getCelebritiesPhotos(celebrities):
 
 
 def main():
+    """
+    Programme principale qui lance l'execution du scrapeur en mode asynchrone.
+    :return: Pas de valeur precise.
+    """
     #start = time.time()
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     result = asyncio.run(async_getCelebritiesPhotos(getListCelebrities()))
