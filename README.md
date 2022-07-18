@@ -1,6 +1,6 @@
 # projet_fs_kafka
 ## Table de matière
-* [Informations générales](#informations-generales)
+* [Informations générales](#informations-générales)
 * [Téchnologies](#téchnologies)
 * [Setup](#setup)
 
@@ -38,12 +38,13 @@ faciale. Rappelant que cet élément de l’architecture est développé par le
 Data Scientist.
 
 
-## Technologies
+## Téchnologies
 Dans ce projet nous utilisons : 
 * Python 3.9 : Toutes les parties de ce projet sont programmer par python.
 * kafka_2.12-3.1.0 : nous utilisons kafka comme un systeme de messagerie entre toutes les différentes parties.
 * Mongodb : nous utilisons mongoengine 0.24.1 afin de stocker les métadonnées des images.
 * Système de fichiers : nous stockons les images dans un SSD en local.
+* beautifulsoup & Selenium : Ces deux bibliothéques sont utilisées pour effectuer le web scraping.
 
 Dans un premier temps, nous avons utilisé un seul broker de kafka du coup l'architecture du projet a été : 
 
