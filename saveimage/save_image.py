@@ -11,7 +11,7 @@ from cash import verification
 import asyncio
 import aiohttp
 from storage import mongodb
-from solr import solr
+
 
 PATH = str(os.path.dirname(os.path.abspath('haarcascade_frontalface_default.xml')))
 PATH = PATH + "\\saveimage\haarcascade_frontalface_default.xml"
