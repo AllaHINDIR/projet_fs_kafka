@@ -6,11 +6,25 @@ from multiprocessing import Process
 from Kafka.consumers import consumer_prod_urls,consumer_storage,consumer_entrianement
 from Kafka.producers import producer_google_image,producer_tmdb,producer_nettoyage
 from storage import mongodb
+from celebritiesnames import get_celebrities
 
 
 if __name__ == '__main__':
 
-    type_recherche = 'n'
+    print("Vous voulez des images pour des nouvelles célébrités ou bien ")
+    print("pour des célébrités qui existent déjà dans la BD? ")
+    print("Choisissez : ")
+    print("N/n : des nouvelles célébrités")
+    print("O/o : des anciennes célébrités")
+    print("B/b : des nouvelles et anciennes célébrités")
+
+    type_recherche = input("Saisissez votre choix : ")
+    if type_recherche == 'o' or type_recherche == 'O':
+        list = get_celebrities.get_mongo_name_celebrities()
+        if list == []:
+            print("Pas de célébrités sur la base de données ! Du coup le programme lance ")
+            print("automatiquement une recherche des nouvelles célébrités.")
+            type_recherche = 'n'
     list_searshKeys = []
     indice = 0
     while True:
