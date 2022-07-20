@@ -35,8 +35,8 @@ if __name__ == "__main__":
     print(end - start)
 
     #déclanchement de netoyage
-    #clean_embed, clean_labels = netoyage.main()
+    clean_embed, clean_labels = netoyage.main()
 
     #lancement de l'entrainement après avoir des nouvelles images
-    #model.getModel(clean_embed, clean_labels)
+    model.getModel(clean_embed, clean_labels)
 

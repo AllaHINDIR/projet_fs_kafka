@@ -46,6 +46,7 @@ Dans ce projet nous utilisons :
 * Système de fichiers : nous stockons les images dans un SSD en local.
 * beautifulsoup & Selenium : Ces deux bibliothéques sont utilisées pour effectuer le web scraping.
 
+## Architecture 1
 Dans un premier temps, nous avons utilisé un seul broker de kafka du coup l'architecture du projet a été : 
 
 <img src='./image_projet/arch1_5.jpg' >
@@ -71,6 +72,67 @@ reçues afin de produire le modèle de classification.
 D’un autre coté, l’utilisation de Kafka a facilité l’int´egration et l’ajout d’un autre scrapeur.
 Il a permet de définir le scrapeur TMDB comme étant un producteur 2 qui cherche et
 envoie les images aux consommateurs 1 et 2.
+
+##  Architecture 2 
+
+Pour pouvoir garantir la tolérance aux pannes, il faut appliquer le principe schématisé dans la figure suivante
+sur tous les éléments de l'architecture 1.
+
+<img src="./image_projet/sous_partie1.jpg">
+
+En cas de panne du broker 2 : 
+
+<img src="./image_projet/souspartie1panne.jpg">
+
+Pour pouvoir lier un producteur à une partition d'un topic, vous pouvez utiliser le code suivant : 
+
+```
+def get_partition(key,all,av):
+    return 0
+
+def producerGoogleImageLinks(name,profession,url,numeroimage,key):
+    topic_name = 'test-topic-replicated'
+    producer = None
+    try:
+        producer = KafkaProducer(bootstrap_servers=['localhost:9092'],value_serializer=lambda v: json.dumps(v).encode('utf-8'),partioner=get_partition())
+    except Exception as ex:
+        print('Exception while connecting Kafka')
+        print(str(ex))
+        try:
+            producer = KafkaProducer(bootstrap_servers=['localhost:9093'],value_serializer=lambda v: json.dumps(v).encode('utf-8'),partioner=get_partition())
+        except Exception as ex:
+            print('Exception while connecting Kafka')
+            print(str(ex))
+        pass
+
+    try:
+        key_bytes = bytes(key, encoding='utf-8')
+        #value_bytes = bytes(url, encoding='utf-8')
+        value = {'name': name,'profession':profession.replace('"',' '), 'numeroImage':numeroimage ,'url': url}
+
+        producer.send(topic_name, value=value,key=key_bytes,partition=0)
+        producer.flush()
+        print('Message published successfully from producerDoodleImageLinks.')
+    except Exception as ex:
+        print('Exception in publishing message')
+        print(str(ex))
+
+```
+
+Pour pouvoir lier un consommateur à une partition d'un topic, vous pouvez utiliser le code suivant : 
+
+```
+def connect_kafka_consumer(topic_one_name):
+    consumer1 = None
+    try:
+        consumer1 = KafkaConsumer(group_id='grp-1',auto_offset_reset='earliest',bootstrap_servers=['localhost:9092'],enable_auto_commit = False)
+        consumer1.assign([TopicPartition(topic_one_name, 0)])
+    except Exception as ex:
+        print('Exception while connecting Kafka')
+        print(str(ex))
+    finally:
+        return consumer1
+```
 
 ## Setup
 Pour éxecuter le projet, vous deverez d'abord importer le projet et installer les apckages nécessaires :
