@@ -81,9 +81,47 @@ $ pip install requirement.txt
 ```
 
 Ensuite, vous devez installer et lancer kafka :
+1) En utilisant le docker-compose :
+
+Vous pouvez installer et lancer kafka et zookeeper en utilisant juste le fichier docker-compose.
+Mais, avant de commencer vous devez installer <a href="https://niwakatech.info/en/setting-up-docker-and-docker-compose-on-wsl2/#:~:text=Installing%20Docker%20with%20WSL2,-First%2C%20start%20Ubuntu&text=Press%20the%20windows%20key%20and%20put%20in%20%E2%80%9CUbuntu%E2%80%9D%20to%20get,the%20following%20docker%20installation%20command.&text=Allow%20docker%20to%20be%20used%20without%20sudo.&text=If%20the%20version%20is%20checked,shown%20below%2C%20you%20have%20succeeded.">docker-compose</a>.
+
+Ensuite, lancer la commande suivante dans le shell : 
+
+```
+$ docker-compose -f docker-compose.yml up -d
+```
+<img src="./image_projet/kafka-zookeeper.jpg">
+
+Puis, pour s'assurer que kafka et zookeeper sont bien lancés :
+
+```
+$ docker ps
+```
+<img src="./image_projet/docker-ps.jpg">
+
+Et finalement vous pouvez se connecter au shell de kafka par : 
+
+```
+$ docker exec -it kafka /bin/sh
+```
+<img src="./image_projet/connect-to-kafka.jpg">
+Du coup, vous pouvez créer des topics... :
+
+```
+$ kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic nameOfTopic
+```
+
+2) En utilisant les commandes (sous Windows) :
+
+Après avoir installé Kafka, vous pouvez le démarer en exécutant les deux commandes suivantes sur deux 
+invite de dommande differents : 
+
 
 ```
 $ .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+```
+```
 $ .\bin\windows\kafka-server-start.bat .\config\server.properties
 ```
 
